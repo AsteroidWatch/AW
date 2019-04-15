@@ -35,7 +35,7 @@
         android:background="@drawable/custom_button"
         android:fontFamily="sans-serif"
         android:text="Login Or SignUp"
-        android:textSize="20dp"
+        android:textSize="18dp"
         android:textStyle="bold"
         android:textColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
