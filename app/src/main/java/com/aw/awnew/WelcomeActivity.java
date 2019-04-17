@@ -33,7 +33,7 @@ public class WelcomeActivity extends AppCompatActivity {
         settingsButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent (WelcomeActivity.this, SettingsActivity.class));
+                startActivity(new Intent (WelcomeActivity.this, SearchActivity.class));
             }
         });
 

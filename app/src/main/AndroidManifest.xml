@@ -19,6 +19,7 @@
         <activity android:name=".SettingsActivity" />
 
         <activity android:name=".SplashActivity" />
+        <activity android:name=".SearchActivity" />
         <activity android:name=".MainViewActivity" />
         <activity android:name=".Main2Activity" />
         <activity android:name=".LoginActivity" />

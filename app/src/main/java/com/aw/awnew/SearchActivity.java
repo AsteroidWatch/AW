@@ -15,6 +15,9 @@ import java.util.Calendar;
 public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
     private boolean startDateSet = false;
     private boolean endDateSet = false;
+    private TextView sDateTextView;
+    private TextView eDTextView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,6 +26,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         //Variables
         final Button startDateButton = (Button) findViewById(R.id.startDateButton);
         Button endDateButton = (Button) findViewById(R.id.endDateButton);
+
+        sDateTextView = (TextView) findViewById(R.id.startDateTextView);
 
         //Button Listeners
         startDateButton.setOnClickListener(new View.OnClickListener() {
@@ -42,6 +47,12 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
                 endDateSet = true;
             }
         });
+
+        if (savedInstanceState != null) {
+            //sDateTextView = savedInstanceState.getString("start date");
+            sDateTextView.setText(String.valueOf("start date"));
+        }
+
     }
 
 
@@ -57,6 +68,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         if(startDateSet) {
             TextView textView = (TextView) findViewById(R.id.startDateTextView);
             textView.setText("Start date: " + currentDateString);
+            sDateTextView = textView;
             startDateSet = false;
         }
 
@@ -66,6 +78,23 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
             endDateSet = false;
 
         }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+
+        outState.putString("start_date", sDateTextView.getText().toString());
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+
+        super.onRestoreInstanceState(savedInstanceState);
+
+        sDateTextView.setText(savedInstanceState.getString("start date"));
+
     }
 
 }
