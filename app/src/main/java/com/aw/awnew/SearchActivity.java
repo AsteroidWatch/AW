@@ -17,6 +17,9 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     private boolean endDateSet = false;
     private TextView sDateTextView;
     private TextView eDTextView;
+    private String startdatee = " ";
+    private String enddatee = " ";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +29,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         //Variables
         final Button startDateButton = (Button) findViewById(R.id.startDateButton);
         Button endDateButton = (Button) findViewById(R.id.endDateButton);
-
         sDateTextView = (TextView) findViewById(R.id.startDateTextView);
+        eDTextView = (TextView) findViewById(R.id.endDateTextView);
 
         //Button Listeners
         startDateButton.setOnClickListener(new View.OnClickListener() {
@@ -49,8 +52,10 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         });
 
         if (savedInstanceState != null) {
-            //sDateTextView = savedInstanceState.getString("start date");
-            sDateTextView.setText(String.valueOf("start date"));
+
+
+            sDateTextView.setText(savedInstanceState.getString("start_date"));
+            eDTextView.setText(savedInstanceState.getString("end_date"));
         }
 
     }
@@ -68,13 +73,14 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
         if(startDateSet) {
             TextView textView = (TextView) findViewById(R.id.startDateTextView);
             textView.setText("Start date: " + currentDateString);
-            sDateTextView = textView;
+
             startDateSet = false;
         }
 
         if(endDateSet) {
             TextView textView = (TextView) findViewById(R.id.endDateTextView);
             textView.setText("End date: " + currentDateString);
+
             endDateSet = false;
 
         }
@@ -84,6 +90,7 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
     protected void onSaveInstanceState(Bundle outState){
 
         outState.putString("start_date", sDateTextView.getText().toString());
+        outState.putString("end_date", eDTextView.getText().toString());
         super.onSaveInstanceState(outState);
 
     }
@@ -93,8 +100,8 @@ public class SearchActivity extends AppCompatActivity implements DatePickerDialo
 
         super.onRestoreInstanceState(savedInstanceState);
 
-        sDateTextView.setText(savedInstanceState.getString("start date"));
-
+        startdatee = savedInstanceState.getString("start_date", "Didnt work");
+        enddatee = savedInstanceState.getString("end_date", "Didnt work");
     }
 
 }
