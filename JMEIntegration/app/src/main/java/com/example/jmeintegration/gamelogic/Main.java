@@ -1,5 +1,7 @@
 package com.example.jmeintegration.gamelogic;
 
+import android.app.Application;
+
 import com.example.jmeintegration.Asteroid;
 import com.jme3.app.SimpleApplication;
 
@@ -297,24 +299,36 @@ public class Main extends SimpleApplication {
 
     boolean pause = false;
 
+    public void changeDirection(boolean forwards) {
+        if (forwards) {
+            backwards = false;
+            changeOfDirection = true;
+        } else {
+            backwards = true;
+            changeOfDirection = true;
+        }
+    }
+
+    public void togglePlayPause() {
+        pause = !pause;
+        if (pause) {
+            cinematic.play();
+        } else {
+            cinematic.pause();
+        }
+    }
+
     private final ActionListener actionListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("rewind") && keyPressed) {
-                backwards = true;
-                changeOfDirection = true;
+                changeDirection(false);
             }
             if (name.equals("fastforward") && keyPressed) {
-                backwards = false;
-                changeOfDirection = true;
+                changeDirection(true);
             }
             if (name.equals("play/pause") && keyPressed) {
-                pause = !pause;
-                if (pause) {
-                    cinematic.play();
-                } else {
-                    cinematic.pause();
-                }
+                togglePlayPause();
             }
         }
     };

@@ -1,8 +1,14 @@
 package com.example.jmeintegration;
 
-import com.jme3.app.AndroidHarnessFragment;
+import android.view.View;
+import android.widget.Button;
 
-public class JMEFragment extends AndroidHarnessFragment {
+import com.example.jmeintegration.gamelogic.Main;
+import com.jme3.app.AndroidHarnessFragment;
+import com.jme3.app.Application;
+import com.jme3.app.SimpleApplication;
+
+public class JMEFragment extends AndroidHarnessFragment2 {
 
     public JMEFragment() {
         // Set main project class (fully qualified path)
@@ -43,4 +49,8 @@ public class JMEFragment extends AndroidHarnessFragment {
         splashPicID = 0;
     }
 
+    @Override
+    public Application getJmeApplication() {
+        return super.getJmeApplication();
+    }
 }

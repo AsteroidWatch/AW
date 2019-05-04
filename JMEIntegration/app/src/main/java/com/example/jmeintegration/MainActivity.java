@@ -1,8 +1,15 @@
 package com.example.jmeintegration;
 
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.Button;
+
+import com.example.jmeintegration.gamelogic.Main;
+import com.jme3.app.AndroidHarnessFragment;
+import com.jme3.app.SimpleApplication;
+import com.jme3.terrain.geomipmap.lodcalc.SimpleLodThreshold;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -10,6 +17,37 @@ public class MainActivity extends AppCompatActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        JMEFragment jmeFragment = (JMEFragment) getSupportFragmentManager().findFragmentById(R.id.jMEFragment);
+        Main app = (Main) ((SimpleApplication) jmeFragment.getJmeApplication());
+
+        Button back_button = (Button) findViewById(R.id.back_button);
+
+        back_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.changeDirection(false);
+            }
+        });
+
+        Button play_button = (Button) findViewById(R.id.play_button);
+
+        play_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.togglePlayPause();
+            }
+        });
+
+
+        Button forward_button = (Button) findViewById(R.id.forward_button);
+
+        forward_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                app.changeDirection(true);
+            }
+        });
     }
 
     @Override
