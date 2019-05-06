@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "1004319563892",
+    "firebase_url": "https://asteroidwatchuser.firebaseio.com",
+    "project_id": "asteroidwatchuser",
+    "storage_bucket": "asteroidwatchuser.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1004319563892:android:4e388d03ffd9c73a",
+        "android_client_info": {
+          "package_name": "com.example.c3471369.awnew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004319563892-4ccj3h33s8aguh742jls850dse97gtk0.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.c3471369.awnew",
+            "certificate_hash": "8de8ea5dfeb9962ec3b13ce86f79b8e53fb32dec"
+          }
+        },
+        {
+          "client_id": "1004319563892-0ql74qk24arr2kbt4e5n47hdffmu1tgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa-ytcJBCPOsTitRb2th_zanqYEVn1C5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004319563892-0ql74qk24arr2kbt4e5n47hdffmu1tgq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

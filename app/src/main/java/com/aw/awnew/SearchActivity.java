@@ -1,0 +1,199 @@
+package com.aw.awnew;
+
+import android.app.DatePickerDialog;
+import android.app.ProgressDialog;
+import android.os.AsyncTask;
+import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.v4.app.DialogFragment;
+import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
+import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
+import java.io.IOException;
+import java.text.DateFormat;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.time.LocalDate;
+
+public class SearchActivity extends AppCompatActivity implements DatePickerDialog.OnDateSetListener{
+    private boolean startDateSet = false;
+    private boolean endDateSet = false;
+    private TextView sDateTextView;
+    private TextView eDTextView;
+    private String startdatee = " ";
+    private String enddatee = " ";
+    public Asteroids getAsteroids = new Asteroids();
+    public AsteroidFetch fetch = new AsteroidFetch();
+    ArrayList<AsteroidFetch> asteroids = new ArrayList<>();
+    private LocalDate startDate, endDate;
+    private FirebaseAuth mAuth;
+    private FirebaseUser currentUser;
+    private static String API_KEY = "uxickliHQnKSJqa7sl3gfdWt6Fw1Oct7rzzxDzHB";
+    private static String urlBaseString = "https://api.nasa.gov/neo/rest/v1/feed?";
+    private String url = urlBaseString + "start_date=" + startDate + "&" + "end_date=" + endDate + "&" + "api_key=" + API_KEY;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_search);
+
+        mAuth = FirebaseAuth.getInstance();
+        currentUser = mAuth.getCurrentUser();
+
+        //Variables
+        final Button startDateButton = (Button) findViewById(R.id.startDateButton);
+        Button endDateButton = (Button) findViewById(R.id.endDateButton);
+        final Button searchButton = (Button) findViewById(R.id.button);
+        sDateTextView = (TextView) findViewById(R.id.startDateTextView);
+        eDTextView = (TextView) findViewById(R.id.endDateTextView);
+
+        //Button Listeners
+        startDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "date picker");
+                startDateSet = true;
+            }
+        });
+
+        endDateButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                DialogFragment datePicker = new DatePickerFragment();
+                datePicker.show(getSupportFragmentManager(), "date picker");
+                endDateSet = true;
+            }
+        });
+
+        if (savedInstanceState != null) {
+
+
+            sDateTextView.setText(savedInstanceState.getString("start_date"));
+            eDTextView.setText(savedInstanceState.getString("end_date"));
+        }
+
+        searchButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new GetJSONTask().execute(url);
+                Log.d("TAG", "" + asteroids.size());
+                if(asteroids.size() > 0) {
+                    Toast.makeText(SearchActivity.this, "Got all asteroids", Toast.LENGTH_SHORT);
+                }
+            }
+        });
+
+
+
+    }
+
+
+    @NonNull
+    @Override
+    public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+        Calendar c = Calendar.getInstance();
+        c.set(Calendar.YEAR, year);
+        c.set(Calendar.MONTH, month);
+        c.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+        String currentDateString = DateFormat.getDateInstance(DateFormat.FULL).format(c.getTime());
+        String m, d;
+
+        if (month < 10) {
+            m = "0" + month;
+        } else {
+            m = "" + month;
+        }
+
+        if (dayOfMonth < 10) {
+            d = "0" + dayOfMonth;
+        } else {
+            d = "" + dayOfMonth;
+        }
+        String sDate = year + "-" + m + "-" + d;
+
+        if(startDateSet) {
+            TextView textView = (TextView) findViewById(R.id.startDateTextView);
+            textView.setText("Start date: " + currentDateString);
+            getAsteroids.setStartDate(sDate);
+            startDate = getAsteroids.getStartDate();
+            startDateSet = false;
+        }
+
+        if(endDateSet) {
+            TextView textView = (TextView) findViewById(R.id.endDateTextView);
+            textView.setText("End date: " + currentDateString);
+            getAsteroids.setEndDate(sDate);
+            endDate = getAsteroids.getEndDate();
+            endDateSet = false;
+
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState){
+
+        outState.putString("start_date", sDateTextView.getText().toString());
+        outState.putString("end_date", eDTextView.getText().toString());
+        super.onSaveInstanceState(outState);
+
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState){
+
+        super.onRestoreInstanceState(savedInstanceState);
+
+        startdatee = savedInstanceState.getString("start_date", "Didnt work");
+        enddatee = savedInstanceState.getString("end_date", "Didnt work");
+    }
+
+    private void getDataFromUrl() {
+        try {
+            Asteroids.getAsteroidsRootJSON(url);
+            asteroids = getAsteroids.roids(startDate, endDate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    private class GetJSONTask extends AsyncTask<String, Void, String> {
+        private ProgressDialog pd;
+
+        // onPreExecute called before the doInBackgroud start for display
+        // progress dialog.
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+            pd = ProgressDialog.show(SearchActivity.this, "", "Loading", true,
+                    false); // Create and show Progress dialog
+        }
+
+        @Override
+        protected String doInBackground(String... urls) {
+
+            try {
+                return Asteroids.getAsteroidsRootJSON(urls[0]);
+            } catch (Exception e) {
+                return "Unable to retrieve data. URL may be invalid.";
+            }
+        }
+
+        // onPostExecute displays the results of the doInBackgroud and also we
+        // can hide progress dialog.
+        @Override
+        protected void onPostExecute(String result) {
+            pd.dismiss();
+        }
+    }
+}
+
+
