@@ -2,7 +2,9 @@ package com.example.jmeintegration.gamelogic;
 
 import android.app.Application;
 
+import com.example.jmeintegration.Action;
 import com.example.jmeintegration.Asteroid;
+import com.example.jmeintegration.MoveAction;
 import com.jme3.app.SimpleApplication;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class Main extends SimpleApplication {
 
     Cinematic cinematic;
     CameraNode motionCam;
-    ArrayList<Geometry> geos = new ArrayList<Geometry>();
+    ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
 
     ArrayList<MotionEvent> events = new ArrayList<MotionEvent>();
 
@@ -40,38 +42,21 @@ public class Main extends SimpleApplication {
         app.start();
     }
 
-    ArrayList<Geometry> generateGeos(int count) {
-        ArrayList<Geometry> geos = new ArrayList<Geometry>();
-        for (int i = 1; i < count + 1; i++) {
-            Box box = new Box(0.5f, 0.5f, 0.5f);
-            Geometry geo = new Geometry("Box", box);
-            geo.scale((float) Math.pow(2, i), (float) Math.pow(2, i), (float) Math.pow(2, i));
-            Material mat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            geo.setMaterial(mat);
-            geos.add(geo);
-        }
-        return geos;
-    }
-
     ArrayList<Asteroid> getAsteroids(int count) {
         ArrayList<Asteroid> asteroids = new ArrayList<Asteroid>();
         for (int i = 1; i < count + 1; i++) {
-            Asteroid asteroid = new Asteroid();
-            asteroid.size = (float) Math.pow(2, i);
             Spatial spatial = assetManager.loadModel("asteroid" + i + ".obj");
-            //Spatial spatial = assetManager.loadModel("someCube.obj");
-            asteroid.model = getGeometry(spatial);
-            asteroid.model.scale((float) Math.pow(2, i), (float) Math.pow(2, i), (float) Math.pow(2, i));
-            System.out.println(asteroid);
+            float size = (float) Math.pow(2, i);
+            Geometry model = getGeometry(spatial);
+            model.scale((float) Math.pow(2, i), (float) Math.pow(2, i), (float) Math.pow(2, i));
+            Asteroid asteroid = new Asteroid("Asteroid " + i, size, model, assetManager);
             asteroids.add(asteroid);
         }
         return asteroids;
     }
 
-    void asteroidsToGeos(ArrayList<Asteroid> asteroids) {
-        for (Asteroid asteroid : asteroids) {
-            geos.add(asteroid.model);
-        }
+    void processAsteroids() {
+        asteroids = ;
     }
 
     void renderInWireframe() {
@@ -79,108 +64,6 @@ public class Main extends SimpleApplication {
         renderState.setWireframe(true);
         getRenderManager().setForcedRenderState(renderState);
     }
-
-    void layoutGeos(ArrayList<Geometry> geos) {
-        for (int index = 0; index < geos.size(); index++) {
-            boolean previousIndexNotNegative = index - 1 >= 0;
-            Geometry geo = geos.get(index);
-            Vector3f pos = new Vector3f(0, 0, 0);
-
-            if (previousIndexNotNegative) {
-                Geometry prevGeo = geos.get(index - 1);
-                Vector3f prevGeoPos = prevGeo.getLocalTranslation();
-                Vector3f prevGeoScale = prevGeo.getWorldScale();
-                pos = prevGeoPos;
-                pos.x = prevGeoPos.x + prevGeoScale.x/2 + geo.getWorldScale().x/2 + geo.getWorldScale().x - prevGeo.getWorldScale().x;
-            }
-
-            pos.z = -geo.getWorldScale().z/2;
-            pos.y = geo.getWorldScale().y/2;
-
-            geo.setLocalTranslation(pos);
-            rootNode.attachChild(geo);
-        }
-    }
-
-    int currentIndex = 0;
-    float time = 0;
-
-    void travelThroughGeos(int startIndex, int endIndex) {
-
-        timeWithinEvent = 0;
-
-        if (startIndex > endIndex) {
-            int newStartIndex = endIndex;
-            endIndex = startIndex;
-            startIndex = newStartIndex;
-        }
-
-        while (startIndex < endIndex) {
-
-            int accessingIndex = backwards ? endIndex - startIndex : startIndex;
-
-            travelToGeo(geos.get(accessingIndex), geos.get(accessingIndex + (backwards ? -1 : 1)), 3, time);
-
-            startIndex += 1;
-            time += 3;
-
-            timeWithinEvent += 3;
-        }
-
-    }
-
-    int timeWithinEvent = 0;
-
-    void travelToGeo(Geometry from, Geometry to, float duration, float startingTime) {
-        MotionPath path = new MotionPath();
-        path.setCurveTension(0);
-        path.addWayPoint(from.getWorldTranslation().add(0, 0, from.getWorldScale().z * 5));
-        path.addWayPoint(to.getWorldTranslation().add(0, 0, to.getWorldScale().z * 5));
-        MotionEvent event = new MotionEvent(motionCam, path);
-
-        event.addListener(new CinematicEventListener() {
-
-            @Override
-            public void onPause(CinematicEvent arg0) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onPlay(CinematicEvent arg0) {
-                // TODO Auto-generated method stub
-            }
-
-            @Override
-            public void onStop(CinematicEvent arg0) {
-                // TODO Auto-generated method stub
-
-                int index = geos.indexOf(to);
-
-                if (index == 0 || index == geos.size() - 1) {
-                    changeOfDirection = false;
-                    return;
-                }
-
-                if (changeOfDirection) {
-                    if (backwards) {
-                        travelThroughGeos(index, 0);
-                    } else {
-                        travelThroughGeos(index, geos.size() - 1);
-                    }
-                    changeOfDirection = false;
-                    goToTime = true;
-                }
-
-            }
-
-        });
-
-        event.setInitialDuration(1);
-        events.add(event);
-        cinematic.addCinematicEvent(time, event);
-    }
-
-    boolean goToTime = false;
 
     @Override
     public void simpleInitApp() {
@@ -195,89 +78,180 @@ public class Main extends SimpleApplication {
 
         rootNode.addLight(new AmbientLight());
 
-        //testSetup();
-
         initiateSizeComparisonScene();
 
     }
 
-    void testSetup() {
+    void lineUpAsteroids() {
 
-        asteroidsToGeos(getAsteroids(200));
+        for (Asteroid asteroid : asteroids) {
+            rootNode.attachChild(asteroid.model);
+            int previousIndex = asteroids.indexOf(asteroid) - 1;
 
-        lineUpGeos();
+            Asteroid previousAsteroid = previousIndex >= 0 ? asteroids.get(previousIndex) : null;
 
-    }
+            Vector3f previousScale = previousAsteroid != null ? previousAsteroid.model.getWorldScale() : new Vector3f(0, 0, 0);
+            Vector3f scale = asteroid.model.getWorldScale();
 
-    void lineUpGeos() {
-
-        for (Geometry geo : geos) {
-            rootNode.attachChild(geo);
-            int previousIndex = geos.indexOf(geo) - 1;
-
-            Geometry previousGeo = previousIndex >= 0 ? geos.get(previousIndex) : null;
-
-            Vector3f previousScale = previousGeo != null ? previousGeo.getWorldScale() : new Vector3f(0, 0, 0);
-            Vector3f scale = geo.getWorldScale();
-
-            Vector3f previousPosition = previousGeo != null ? previousGeo.getLocalTranslation() : new Vector3f(0, 0, 0);
+            Vector3f previousPosition = previousAsteroid != null ? previousAsteroid.model.getLocalTranslation() : new Vector3f(0, 0, 0);
 
             float combinedDiameters = previousScale.x + scale.x;
 
-            geo.setLocalTranslation(previousPosition.x + previousScale.x + previousScale.x / 2 + scale.x / 2 + combinedDiameters / 2, (scale.y / 2) + (scale.y / 3), 0);
+            asteroid.model.setLocalTranslation(previousPosition.x + previousScale.x + previousScale.x / 2 + scale.x / 2 + combinedDiameters / 2, (scale.y / 2) + (scale.y / 3), -scale.z / 2);
         }
 
+    }
+
+    void addText() {
+        for (Asteroid asteroid : asteroids) {
+            asteroid.text.setLocalTranslation(asteroid.model.getLocalTranslation().add(-asteroid.model.getWorldScale().x * 1.5f, asteroid.model.getWorldScale().y * 1, 0));
+            rootNode.attachChild(asteroid.text);
+        }
+    }
+
+//	void setUpCamSequence() {
+//
+//		int nAsteroidsToTraverse = asteroids.size();
+//
+//		moveCamTo(asteroids.get(0).model.getLocalTranslation().add(0, 0, asteroids.get(0).model.getWorldScale().z * 5));
+//
+//		MotionPath motionPath = new MotionPath();
+//
+//		MotionEvent asteroidTraversing;
+//
+//		asteroidTraversing = new MotionEvent(motionCam, motionPath);
+//
+//		motionPath.addWayPoint(asteroids.get(0).model.getLocalTranslation().add(0, 0, asteroids.get(0).model.getWorldScale().z * 5));
+//
+//		for (int i = 0 ; i < nAsteroidsToTraverse - 1; i++) {
+//
+//			Geometry asteroidGeoNext = asteroids.get(i + 1).model;
+//
+//			motionPath.addWayPoint(asteroidGeoNext.getLocalTranslation().add(0, 0, asteroidGeoNext.getWorldScale().z * 5));
+//
+//		}
+//
+//		asteroidTraversing.setInitialDuration(nAsteroidsToTraverse);
+//
+//		motionPath.addListener(new MotionPathListener() {
+//
+//			@Override
+//			public void onWayPointReach(MotionEvent arg0, int arg1) {
+//				System.out.println("Way point reached");
+//				waitFor(3);
+//			}
+//
+//		});
+//
+//		cinematic.addCinematicEvent(5, asteroidTraversing);
+//
+//	}
+
+
+    void moveCamTo(Vector3f vec) {
+        motionCam.setLocalTranslation(vec);
     }
 
     void initiateSizeComparisonScene() {
 
-        ArrayList<Asteroid> asteroids = getAsteroids(20);
+        asteroids = getAsteroids(20);
 
-        asteroidsToGeos(asteroids);
+//		float duration = 100;
+//
+//		cinematic = new Cinematic(rootNode, duration);
 
-        //geos = generateGeos(20);
+        //motionCam = cinematic.bindCamera("cam", cam);
+//
+//		motionCam.rotate(0, (float) Math.PI, 0);
 
-        float duration = 100;
+        lineUpAsteroids();
 
-        cinematic = new Cinematic(rootNode, duration);
+        addText();
 
-        motionCam = cinematic.bindCamera("cam", cam);
+        startSequence();
 
-        motionCam.rotate(0, (float) Math.PI, 0);
+        //setUpCamSequence();
 
-        lineUpGeos();
-
-        travelToGeo(geos.get(0), geos.get(0), 3, 0);
-        time += 3;
-
-        travelThroughGeos(0, geos.size() - 1);
-
-        stateManager.attach(cinematic);
-
-        cinematic.activateCamera(0, "cam");
+//		stateManager.attach(cinematic);
+//
+//		cinematic.activateCamera(0, "cam");
 
         initKeys();
 
-        cinematic.play();
+        //scheduledActions.add(new MoveAction(cam, geos.get(5), 1000));
 
+//		cinematic.play();
+
+    }
+
+    ArrayList<Action> scheduledActions = new ArrayList<Action>();
+
+
+
+
+    void startSequence() {
+        for (int i = 0; i < asteroids.size(); i++) {
+            Asteroid asteroid = asteroids.get(i);
+            scheduledActions.add(new MoveAction(cam, asteroid.model, 3, currentTime));
+        }
+    }
+
+    float currentTime = 0;
+
+    int index = 0;
+
+    void attendActions(float tpf) {
+
+        if (scheduledActions.size() < 1 || index > scheduledActions.size() - 1) {
+            return;
+        }
+
+        if (scheduledActions.get(index).completed == false) {
+            scheduledActions.get(index).run(currentTime);
+        }
+
+        if (scheduledActions.get(index).completed == true) {
+            index += backwards ? -1 : 1;
+            if (index < 0) {
+                index = 0;
+            }
+        }
+
+        System.out.println(index);
+
+    }
+
+    void reverseDirection() {
+        for (int i = (backwards ? 1 : scheduledActions.size() - 2); backwards ? (i < scheduledActions.size()) : (i > 1); i += (backwards ? 1 : -1)) {
+            Action action = scheduledActions.get(i);
+            if ((MoveAction) action != null) {
+                MoveAction moveAction = (MoveAction) action;
+
+                moveAction.to = asteroids.get(i + (backwards ? -1 : 1)).model;
+                moveAction.destination = moveAction.to.getLocalTranslation().add(0, 0, moveAction.to.getWorldScale().z * 5);
+                moveAction.vectorNormalized = moveAction.destination.subtract(moveAction.target.getLocation()).normalizeLocal();
+
+            }
+        }
     }
 
     @Override
     public void simpleUpdate(float tpf) {
-
-        if (goToTime) {
-
-            cinematic.setTime(time - timeWithinEvent);
-
-            goToTime = false;
-
-        }
-
         if (!pause) {
-            for (Geometry geo : geos) {
-                geo.rotate(0, 0.005f, 0);
-            }
+            currentTime += tpf;
+
+            attendActions(tpf);
         }
+
+        //System.out.println(motionCam.getLocalTranslation());
+
+        //System.out.println(currentTime);
+
+		if (pause == false) {
+			for (Asteroid asteroid : asteroids) {
+				asteroid.model.rotate(0, 0.005f, 0);
+			}
+		}
 
     }
 
@@ -293,46 +267,46 @@ public class Main extends SimpleApplication {
         inputManager.addListener(actionListener, "play/pause");
     }
 
-
-    boolean backwards = false;
-    boolean changeOfDirection = false;
-
     boolean pause = false;
 
-    public void changeDirection(boolean forwards) {
-        if (forwards) {
-            backwards = false;
-            changeOfDirection = true;
+    public void togglePausePlay() {
+        if (pause) {
+            pause = false;
+            //cinematic.play();
         } else {
-            backwards = true;
-            changeOfDirection = true;
+            pause = true;
+            //cinematic.pause();
         }
     }
 
-    public void togglePlayPause() {
-        pause = !pause;
-        if (pause) {
-            cinematic.play();
-        } else {
-            cinematic.pause();
-        }
+    public static boolean backwards = false;
+
+    public void playBackwards() {
+        backwards = true;
+        reverseDirection();
+        //cinematic.setSpeed(-1);
+    }
+
+    public void playForwards() {
+        backwards = false;
+        reverseDirection();
+        //cinematic.setSpeed(1);
     }
 
     private final ActionListener actionListener = new ActionListener() {
         @Override
         public void onAction(String name, boolean keyPressed, float tpf) {
             if (name.equals("rewind") && keyPressed) {
-                changeDirection(false);
+                playBackwards();
             }
             if (name.equals("fastforward") && keyPressed) {
-                changeDirection(true);
+                playForwards();
             }
             if (name.equals("play/pause") && keyPressed) {
-                togglePlayPause();
+                togglePausePlay();
             }
         }
     };
-
 
     public Geometry getGeometry(Spatial spatial){
         System.out.println("getMyGeometry()");

@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         back_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.changeDirection(false);
+                app.playBackwards();
             }
         });
 
@@ -35,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         play_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.togglePlayPause();
+                app.togglePausePlay();
             }
         });
 
@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         forward_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                app.changeDirection(true);
+                app.playForwards();
             }
         });
     }
