@@ -23,7 +23,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editText"
+        android:id="@+id/editTextName"
         android:layout_width="339dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
@@ -35,13 +35,14 @@
         android:inputType="textPersonName"
         android:padding="15dp"
         android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView" />
 
     <EditText
-        android:id="@+id/editText2"
+        android:id="@+id/editTextRegisterEmail"
         android:layout_width="341dp"
         android:layout_height="60dp"
         android:layout_marginEnd="8dp"
@@ -53,13 +54,14 @@
         android:inputType="textEmailAddress"
         android:padding="15dp"
         android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextName" />
 
     <EditText
-        android:id="@+id/editText3"
+        android:id="@+id/editTextUsername"
         android:layout_width="341dp"
         android:layout_height="65dp"
         android:layout_marginEnd="8dp"
@@ -71,13 +73,14 @@
         android:inputType="text"
         android:padding="15dp"
         android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText2" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextRegisterEmail" />
 
     <EditText
-        android:id="@+id/editText4"
+        android:id="@+id/editTextPassword"
         android:layout_width="343dp"
         android:layout_height="59dp"
         android:layout_marginEnd="8dp"
@@ -89,13 +92,14 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText3" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextUsername" />
 
     <EditText
-        android:id="@+id/editText5"
+        android:id="@+id/editTextPassword2"
         android:layout_width="342dp"
         android:layout_height="54dp"
         android:layout_marginEnd="8dp"
@@ -107,23 +111,24 @@
         android:inputType="textPassword"
         android:padding="15dp"
         android:textColorHint="#ffffff"
+        android:textColor="#ffffff"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText4" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword" />
 
     <Button
-        android:id="@+id/button4"
+        android:id="@+id/buttonRegister"
         android:layout_width="130dp"
         android:layout_height="wrap_content"
         android:layout_marginLeft="36dp"
         android:layout_marginStart="36dp"
         android:layout_marginTop="40dp"
         android:background="@drawable/custom_button"
-        android:text="Submit"
+        android:text="Register"
         android:textColor="#fff"
-        android:textSize="30dp"
+        android:textSize="25dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editText5" />
+        app:layout_constraintTop_toBottomOf="@+id/editTextPassword2" />
 
 
 </android.support.constraint.ConstraintLayout>

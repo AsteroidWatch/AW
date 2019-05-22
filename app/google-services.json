@@ -8,6 +8,43 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:1004319563892:android:ca533cedf2ff0fca",
+        "android_client_info": {
+          "package_name": "com.aw.awnew"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1004319563892-6d7f0dugovpja5oa9nl1ap3jejpbn5da.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.aw.awnew",
+            "certificate_hash": "e803d7b41b4a99ba7d8f0eb2caaf8f281d8ee914"
+          }
+        },
+        {
+          "client_id": "1004319563892-0ql74qk24arr2kbt4e5n47hdffmu1tgq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBa-ytcJBCPOsTitRb2th_zanqYEVn1C5I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1004319563892-0ql74qk24arr2kbt4e5n47hdffmu1tgq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:1004319563892:android:cda6ba04f8baa54b",
         "android_client_info": {
           "package_name": "com.example.asteroidwatch"
