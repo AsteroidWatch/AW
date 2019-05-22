@@ -55,7 +55,8 @@ public class TestSizeComparison extends SimpleApplication {
 		ArrayList<ComparisonAsteroid> asteroids = new ArrayList<ComparisonAsteroid>();
 		int count = roids.size();
 		for (int i = 1; i < count; i++) {
-			Spatial spatial = assetManager.loadModel("assets/asteroid" + Math.floor(Math.random() * 200 + 1) + ".obj");
+			int asteroidModelNumber = (int) Math.floor(Math.random() * 200 + 1);
+			Spatial spatial = assetManager.loadModel("assets/asteroid" + asteroidModelNumber + ".obj");
 			float size = (float) roids.get(i - 1).dia;
 			Geometry model = getGeometry(spatial);
 			model.scale(size, size, size);
