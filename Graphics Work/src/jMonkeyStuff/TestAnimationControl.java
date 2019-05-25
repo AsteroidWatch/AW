@@ -237,12 +237,12 @@ public class TestAnimationControl extends SimpleApplication {
 		return new Spatial[] { box1Geo, box2Geo };
 	}
 		
-	public static void main(String[] args) {
-		System.out.println("main: Entry point");
-		
-		TestAnimationControl app = new TestAnimationControl();
-		app.start();
-	}
+//	public static void main(String[] args) {
+//		System.out.println("main: Entry point");
+//		
+//		TestAnimationControl app = new TestAnimationControl();
+//		app.start();
+//	}
 
 	
 }
