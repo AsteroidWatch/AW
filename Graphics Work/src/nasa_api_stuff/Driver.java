@@ -1,5 +1,6 @@
 package nasa_api_stuff;
 
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -7,7 +8,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
@@ -16,6 +19,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jMonkeyStuff.TestSizeComparison;
+
 
 public class Driver {
 	
@@ -27,8 +31,8 @@ public class Driver {
 	
 	
 	
-	static String START_DATE = "2012-01-31";
-	static String END_DATE = "2012-01-31";
+	static String START_DATE = "2019-05-25";
+	static String END_DATE = "2019-05-27";
 	
 	
 	
@@ -102,22 +106,22 @@ public class Driver {
 		
 	public static void main(String[] args) {
 		ArrayList<Asteroid> asteroids = getAsteroids(getAsteroidsJSON(getDateFields(getAsteroidsRootJSON(START_DATE, END_DATE))));
-		//Asteroid[] asteroidArr = asteroids.toArray(new Asteroid[asteroids.size()]);
-		//Arrays.sort(asteroidArr, new SortBySize());
-		
+//		Asteroid[] asteroidArr = asteroids.toArray(new Asteroid[asteroids.size()]);
+//		Arrays.sort(asteroidArr, new SortBySize());
+//		
 //		System.out.println("A list of info of near-Earth Asteroids (NEAs) between " +  START_DATE + " and " + END_DATE);
 //		System.out.println();
-		
+//		
 //		for (Asteroid asteroid : asteroidArr) {
 //			System.out.println(asteroid); 
 //		}
-		
+				
 		asteroids.sort(new SortBySize());
 		
 		TestSizeComparison sizeComparisonApp = new TestSizeComparison(asteroids);
 		sizeComparisonApp.start(); 
 	} 
-
+ 
 }
 
 class SortBySize implements Comparator<Asteroid> {

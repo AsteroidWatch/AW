@@ -43,9 +43,10 @@ public class Asteroid {
 	}
 	
 	public String getName() {
-		String filteredName = getStringBetweenTwoChars(name, "(", ")");
+		String filteredName = name;
+		//filteredName = getStringBetweenTwoChars(filteredName, "(", ")");
 		return filteredName; 
-	}
+	} 
 		
 	@JsonProperty("estimated_diameter") Float estimatedDiameter;
 	

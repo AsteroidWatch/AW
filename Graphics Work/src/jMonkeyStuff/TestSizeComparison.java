@@ -35,7 +35,7 @@ public class TestSizeComparison extends SimpleApplication {
 	Box box2 = new Box(5, 2, 3);
 	
 	ArrayList<MotionEvent> motionEvents;
-	
+		
 	MotionEvent firstEvent;
 	
 	Cinematic cinematic;
@@ -161,7 +161,9 @@ public class TestSizeComparison extends SimpleApplication {
 		
 		//setupTestSequence();
 		
-		//settings.setFrameRate(60);
+		settings.setFrameRate(60);
+		
+		restart();
 		
 		setupSizeComparisonSequence(); 
 		
@@ -406,7 +408,7 @@ public class TestSizeComparison extends SimpleApplication {
 		
 		if (cinematic.getPlayState().equals(PlayState.Playing)) {
 			for (ComparisonAsteroid a : asteroids) {
-				a.model.rotate(0, 0.01f, 0);
+				a.model.rotate(0, 0.001f, 0);
 			}
 		}
 
